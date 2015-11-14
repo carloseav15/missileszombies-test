@@ -8,6 +8,7 @@
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.util.Scanner;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -31,24 +32,33 @@ public class MissilesZombiesPruebas {
     static Area [][] matriz = new Area[0][0];
     
     public static void cargarMatriz(Area[][] matriz) throws FileNotFoundException, IOException{
-                
+     
         String temp;
+        String archivo= "";
         ArrayList<String> datosTxt = new ArrayList<String>();
         ArrayList<String> tamañoMatriz = new ArrayList<String>();
+
+        System.out.println("Ingrese la dirección del archivo por favor:");
+
+        try {
+            
+            Scanner entradaEscaner = new Scanner (System.in);
+            archivo = entradaEscaner.nextLine ();
         
-        FileReader fReader = new FileReader("sample.txt");
-        BufferedReader buffer = new BufferedReader(fReader);
+            FileReader fReader = new FileReader(archivo);
+            BufferedReader buffer = new BufferedReader(fReader);
        
-        while((temp = buffer.readLine())!=null){
-            datosTxt.add(temp);
-        }
-        buffer.close();
-        
-        if(datosCorrectos(datosTxt) == true){
+            while((temp = buffer.readLine())!=null){
+                datosTxt.add(temp);
+            }
+
+            buffer.close();
+
+            if(datosCorrectos(datosTxt) == true){
             StringTokenizer st = new StringTokenizer(datosTxt.get(0)," ");
         
-        while (st.hasMoreTokens())
-        tamañoMatriz.add(st.nextToken());
+            while (st.hasMoreTokens())
+            tamañoMatriz.add(st.nextToken());
         
             int width = Integer.parseInt(tamañoMatriz.get(0));
             int height = Integer.parseInt(tamañoMatriz.get(1));
@@ -88,7 +98,12 @@ public class MissilesZombiesPruebas {
             } 
         }else{
             System.out.println("Algun o Algunos de los datos de entrada no son correctos\nVerifique los datos de entrada por favor");
-        }           
+        }
+
+            } catch (FileNotFoundException e){
+                System.out.println("Archivo no encontrado, ingrese una direccion de archivo valido por favor.");
+            }
+                   
     }
     
     public static void hallarBombas(Area[][] matriz) throws FileNotFoundException, IOException{
@@ -252,10 +267,13 @@ public class MissilesZombiesPruebas {
                     if(!esNumero(temp.get(j))) return false;
                 }
                 
-                if(i==0){
+                if(i==0 && temp.size()<2) return false;
+                else{
+
                     width = Integer.parseInt(temp.get(0));
                     height = Integer.parseInt(temp.get(1));
                 }
+
             
                 if(i>0 && temp.size()<3) return false;
                 
